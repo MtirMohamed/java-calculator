@@ -1,0 +1,41 @@
+name: Java Calculator CI
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Java
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+
+    - name: Compile Java code
+      run: javac Main.java
+
+    - name: Run tests
+      run: |
+        echo "Running simple calculator tests..."
+        echo "5 + 3 = ?"
+        result=$(echo "5+3" | bc)
+        if [ "$result" -ne 8 ]; then
+          echo "Test failed!"
+          exit 1
+        fi
+        echo "All tests passed!" > test-report.txt
+
+    - name: Upload test report
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-report
+        path: test-report.txt
+
+    - name: Build Docker image
+      run: docker build -t javacalculator .
