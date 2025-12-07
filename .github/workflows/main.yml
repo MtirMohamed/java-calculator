@@ -32,7 +32,7 @@ jobs:
         echo "All tests passed!" > test-report.txt
 
     - name: Upload test report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: test-report
         path: test-report.txt
